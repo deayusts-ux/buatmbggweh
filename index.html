@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Gift for You - Our Special Song</title>
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="A special romantic music gift web experience with interactive turntable and custom dedication.">
+  <meta name="author" content="Antigravity Pair">
+  
+  <!-- Premium Typography: Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,700;1,400;1,600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Ambient floating bokeh particles container -->
+  <div id="bokeh-container" class="bokeh-container"></div>
+  
+  <!-- Main Application Wrapper -->
+  <main class="app-container">
+    
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="gift-title-container">
+        <!-- Gift Icon SVG -->
+        <svg class="gift-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 12v10H4V12M2 7h20v5H2zM12 22V7M12 7c2.5-2.5 4.5-1.5 4.5 1S14 11 12 12c-2-1-4.5-3.5-4.5-4S9.5 4.5 12 7z" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h1 id="gift-header-text" class="gift-header-title">A Gift for You</h1>
+      </div>
+      
+      <!-- Settings Button -->
+      <button id="settings-btn" class="icon-btn" aria-label="Open settings">
+        <svg class="settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </header>
+    
+    <!-- Music Player Glassmorphism Card -->
+    <section class="player-card">
+      <span class="now-playing-label">NOW PLAYING</span>
+      
+      <!-- Turntable Cover Container -->
+      <div class="turntable-container">
+        <!-- Vinyl Record Cover (Rotates when playing) -->
+        <div id="vinyl-cover" class="vinyl-cover-wrapper">
+          <img id="cover-img" src="assets/cover.png" alt="Vinyl record turntable cover" class="cover-image">
+          <div class="vinyl-grooves-overlay"></div>
+          <div class="vinyl-center-hole"></div>
+        </div>
+        
+        <!-- Tonearm / Needle (Sweeps onto record when playing) -->
+        <div id="tonearm" class="tonearm-wrapper">
+          <svg class="tonearm-svg" viewBox="0 0 100 150" fill="none">
+            <!-- Tonearm base -->
+            <circle cx="75" cy="25" r="12" fill="#333" stroke="#444" stroke-width="1"/>
+            <circle cx="75" cy="25" r="5" fill="#f8cf6c"/>
+            <!-- Arm tube -->
+            <path d="M75 25 L65 75 L30 115" stroke="#ccc" stroke-width="4" stroke-linecap="round" fill="none"/>
+            <path d="M75 25 L65 75 L30 115" stroke="#fff" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <!-- Weight counter-balance -->
+            <rect x="67" y="5" width="16" height="10" rx="2" fill="#555" stroke="#222"/>
+            <!-- Cartridge and stylus -->
+            <rect x="22" y="112" width="12" height="18" rx="1" transform="rotate(-30 28 121)" fill="#e96969"/>
+            <circle cx="24" cy="125" r="2" fill="#fff"/>
+          </svg>
+        </div>
+      </div>
+      
+      <!-- Track Meta (Title and Message) -->
+      <div class="track-meta">
+        <h2 id="song-title" class="song-title">Our Special Song</h2>
+        <p id="song-artist" class="song-artist">From Me to You</p>
+      </div>
+      
+      <!-- Seekbar and Time Display -->
+      <div class="seekbar-container">
+        <div class="seekbar-track-wrapper">
+          <div id="seekbar-progress-bar" class="seekbar-progress">
+            <div id="seekbar-handle" class="seekbar-handle"></div>
+          </div>
+        </div>
+        <div class="time-display">
+          <span id="time-elapsed">0:00</span>
+          <span id="time-total">3:45</span>
+        </div>
+      </div>
+      
+      <!-- Player Control Actions -->
+      <div class="player-controls">
+        <button id="shuffle-btn" class="control-btn" aria-label="Toggle shuffle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 3h5v5M4 20l7-7M21 3L9 15M4 4l5 5M16 21h5v-5M15 15l6 6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        
+        <button id="prev-btn" class="control-btn" aria-label="Previous track">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M6 6h2v12H6zm3.5 6L18 18V6z"/>
+          </svg>
+        </button>
+        
+        <!-- Main Play Button -->
+        <button id="play-btn" class="play-btn" aria-label="Play music">
+          <!-- Play icon (shown by default) -->
+          <svg id="play-icon" class="play-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+          <!-- Pause icon (hidden by default) -->
+          <svg id="pause-icon" class="pause-icon hidden" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+          </svg>
+        </button>
+        
+        <button id="next-btn" class="control-btn" aria-label="Next track">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M6 18l8.5-6L6 6zm9-12v12h2V6z"/>
+          </svg>
+        </button>
+        
+        <button id="repeat-btn" class="control-btn" aria-label="Toggle repeat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 1l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M21 13v2a4 4 0 0 1-4 4H3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span id="repeat-badge" class="repeat-badge hidden">1</span>
+        </button>
+      </div>
+    </section>
+    
+    <!-- Romantic Dedication Message -->
+    <section class="dedication-section">
+      <p id="dedication-text" class="dedication-text">token of my love for you.</p>
+    </section>
+  </main>
+  
+  <!-- Audio Tag (for file uploads or direct streaming links) -->
+  <audio id="audio-player" style="display:none;"></audio>
+  
+  <!-- Settings & Customization Modal -->
+  <div id="settings-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>Customize Your Gift</h2>
+        <button id="modal-close-btn" class="close-btn" aria-label="Close settings">&times;</button>
+      </div>
+      
+      <div class="modal-body">
+        <form id="settings-form" onsubmit="return false;">
+          <!-- Gift Title -->
+          <div class="form-group">
+            <label for="input-gift-header">Gift Title Header</label>
+            <input type="text" id="input-gift-header" placeholder="A Gift for You" maxlength="40">
+          </div>
+          
+          <!-- Song Title -->
+          <div class="form-group">
+            <label for="input-song-title">Song Title</label>
+            <input type="text" id="input-song-title" placeholder="Our Special Song" maxlength="50">
+          </div>
+          
+          <!-- Artist Name -->
+          <div class="form-group">
+            <label for="input-song-artist">Artist / Message Subtitle</label>
+            <input type="text" id="input-song-artist" placeholder="From Me to You" maxlength="50">
+          </div>
+          
+          <!-- Dedication Text -->
+          <div class="form-group">
+            <label for="input-dedication">Dedication Message (Bottom)</label>
+            <textarea id="input-dedication" rows="2" placeholder="token of my love for you." maxlength="150"></textarea>
+          </div>
+          
+          <!-- Sound Tracks Selector -->
+          <div class="form-group">
+            <label for="input-track-select">Select Music Style</label>
+            <select id="input-track-select">
+              <option value="procedural">✨ Offline Lo-Fi Ambient Synth (Generative Piano & Crackle)</option>
+              <option value="preset-1">🎵 Romantic Acoustic Guitar (Preset Track)</option>
+              <option value="preset-2">🎹 Dreamy Cinematic Piano (Preset Track)</option>
+              <option value="custom-url">🔗 Custom Streaming Audio URL</option>
+              <option value="custom-file">📂 Upload Your Own MP3/Audio File</option>
+            </select>
+          </div>
+          
+          <!-- Custom Audio URL (shows when custom-url is selected) -->
+          <div id="custom-audio-url-group" class="form-group hidden">
+            <label for="input-audio-url">Audio URL (.mp3 direct link)</label>
+            <input type="url" id="input-audio-url" placeholder="https://example.com/song.mp3">
+          </div>
+          
+          <!-- Custom Audio File Upload (shows when custom-file is selected) -->
+          <div id="custom-audio-file-group" class="form-group hidden">
+            <label for="input-audio-file">Upload Audio File (MP3, WAV)</label>
+            <input type="file" id="input-audio-file" accept="audio/*">
+            <span class="file-info" id="audio-file-info">No file uploaded</span>
+          </div>
+          
+          <!-- Cover Image Option -->
+          <div class="form-group">
+            <label for="input-cover-select">Cover Image Style</label>
+            <select id="input-cover-select">
+              <option value="default">✨ AI Vintage Turntable (Default)</option>
+              <option value="custom-url">🔗 Custom Image URL</option>
+              <option value="custom-file">📂 Upload Custom Image</option>
+            </select>
+          </div>
+          
+          <!-- Custom Image URL (shows when custom-url selected) -->
+          <div id="custom-image-url-group" class="form-group hidden">
+            <label for="input-image-url">Image URL</label>
+            <input type="url" id="input-image-url" placeholder="https://example.com/cover.png">
+          </div>
+          
+          <!-- Custom Image File Upload (shows when custom-file selected) -->
+          <div id="custom-image-file-group" class="form-group hidden">
+            <label for="input-image-file">Upload Image File (PNG, JPG, WebP)</label>
+            <input type="file" id="input-image-file" accept="image/*">
+            <span class="file-info" id="image-file-info">No file uploaded</span>
+          </div>
+          
+          <!-- Action Buttons -->
+          <div class="form-actions">
+            <button type="button" id="reset-default-btn" class="secondary-btn">Reset Defaults</button>
+            <button type="button" id="save-settings-btn" class="primary-btn">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>

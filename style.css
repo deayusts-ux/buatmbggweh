@@ -1,0 +1,825 @@
+/* ----------------------------------------------------
+   DESIGN SYSTEM & VARIABLES
+   ---------------------------------------------------- */
+:root {
+  --bg-gradient: linear-gradient(180deg, #052218 0%, #010a07 100%);
+  --card-bg: rgba(14, 22, 18, 0.7);
+  --card-border: rgba(255, 255, 255, 0.05);
+  --card-glow: rgba(5, 34, 24, 0.5);
+  
+  --primary-color: #ffb3b0; /* Rose Gold / Soft Pink from Reference */
+  --primary-glow: rgba(255, 179, 176, 0.35);
+  --primary-dark: #e89592;
+  
+  --gold-color: #f8cf6c; /* Golden Yellow for Seek Bar */
+  --gold-glow: rgba(248, 207, 108, 0.4);
+  
+  --text-white: #ffffff;
+  --text-muted: rgba(255, 255, 255, 0.6);
+  --text-dimmed: rgba(255, 255, 255, 0.3);
+  
+  --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  
+  --transition-smooth: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  --transition-bounce: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* ----------------------------------------------------
+   BASE STYLES & RESET
+   ---------------------------------------------------- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: #010a07;
+  color: var(--text-white);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ----------------------------------------------------
+   AMBIENT BOKEH BACKGROUND
+   ---------------------------------------------------- */
+.bokeh-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: var(--bg-gradient);
+  z-index: -1;
+  overflow: hidden;
+}
+
+.bokeh-particle {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.15;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  animation: float-around 25s infinite ease-in-out alternate;
+}
+
+@keyframes float-around {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+  100% {
+    transform: translate(100px, 80px) scale(1.3) rotate(360deg);
+  }
+}
+
+/* ----------------------------------------------------
+   LAYOUT CONTAINER
+   ---------------------------------------------------- */
+.app-container {
+  width: 100%;
+  max-width: 440px;
+  min-height: 100vh;
+  padding: 24px 20px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1;
+}
+
+/* ----------------------------------------------------
+   HEADER STYLES
+   ---------------------------------------------------- */
+.app-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding: 0 4px;
+}
+
+.gift-title-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.gift-icon {
+  width: 24px;
+  height: 24px;
+  color: var(--primary-color);
+  filter: drop-shadow(0 0 6px var(--primary-glow));
+}
+
+.gift-header-title {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  font-weight: 500;
+  letter-spacing: -0.3px;
+  color: var(--primary-color);
+  text-shadow: 0 0 10px rgba(255, 179, 176, 0.2);
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: var(--transition-bounce);
+  border: 1px solid transparent;
+}
+
+.icon-btn:hover {
+  background: rgba(255, 179, 176, 0.1);
+  transform: rotate(45deg);
+  border-color: rgba(255, 179, 176, 0.2);
+}
+
+.icon-btn:active {
+  transform: rotate(45deg) scale(0.9);
+}
+
+.settings-icon {
+  width: 24px;
+  height: 24px;
+}
+
+/* ----------------------------------------------------
+   MUSIC PLAYER CARD (GLASSMORPHISM)
+   ---------------------------------------------------- */
+.player-card {
+  width: 100%;
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--card-border);
+  border-radius: 40px;
+  padding: 32px 24px 28px;
+  box-shadow: 
+    0 30px 60px rgba(0, 0, 0, 0.6), 
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 0 40px var(--card-glow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  transition: var(--transition-smooth);
+}
+
+.player-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 40px;
+  background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.03), transparent 60%);
+  pointer-events: none;
+}
+
+.now-playing-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--primary-color);
+  margin-bottom: 24px;
+  opacity: 0.8;
+  text-shadow: 0 0 8px rgba(255, 179, 176, 0.15);
+}
+
+/* ----------------------------------------------------
+   TURNTABLE & VINYL ANIMATIONS
+   ---------------------------------------------------- */
+.turntable-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 28px;
+  overflow: hidden;
+  margin-bottom: 30px;
+  box-shadow: 
+    0 15px 35px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.04);
+  background: #080d0a;
+}
+
+.vinyl-cover-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 28px;
+  overflow: hidden;
+  transition: transform 1.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transform-origin: center center;
+}
+
+.cover-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Glassy vinyl shine overlay sweep */
+.vinyl-cover-wrapper::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0) 30%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0) 70%
+  );
+  transform: rotate(0deg);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+/* Vinyl record grooves and shine */
+.vinyl-grooves-overlay {
+  position: absolute;
+  top: 5%;
+  left: 5%;
+  width: 90%;
+  height: 90%;
+  border-radius: 50%;
+  background: radial-gradient(circle, 
+    transparent 20%, 
+    rgba(0,0,0,0.9) 20.5%, 
+    rgba(0,0,0,0.85) 30%, 
+    rgba(255,255,255,0.03) 30.5%,
+    rgba(0,0,0,0.9) 31%, 
+    rgba(0,0,0,0.85) 45%, 
+    rgba(255,255,255,0.03) 45.5%,
+    rgba(0,0,0,0.9) 46%, 
+    rgba(0,0,0,0.85) 60%, 
+    rgba(255,255,255,0.03) 60.5%,
+    rgba(0,0,0,0.9) 61%, 
+    rgba(0,0,0,0.85) 75%, 
+    rgba(255,255,255,0.03) 75.5%,
+    rgba(0,0,0,0.9) 76%, 
+    rgba(0,0,0,0.9) 98%
+  );
+  box-shadow: 
+    inset 0 0 20px rgba(0, 0, 0, 0.8),
+    0 0 10px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+
+/* Center hole for record feel */
+.vinyl-center-hole {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #111;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  z-index: 2;
+}
+
+/* Tonearm/Needle Styling */
+.tonearm-wrapper {
+  position: absolute;
+  top: -15px;
+  right: -5px;
+  width: 120px;
+  height: 180px;
+  z-index: 3;
+  pointer-events: none;
+  transform-origin: 75px 25px; /* Pivot center based on SVG */
+  transform: rotate(0deg);
+  transition: transform 1.0s cubic-bezier(0.25, 0.8, 0.25, 1);
+  filter: drop-shadow(-5px 8px 6px rgba(0, 0, 0, 0.4));
+}
+
+.tonearm-svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* ----------------------------------------------------
+   ACTIVE PLAYING ANIMATIONS
+   ---------------------------------------------------- */
+.player-card.playing .vinyl-cover-wrapper {
+  animation: spin-vinyl 12s linear infinite;
+  border-radius: 50%; /* morphs slightly into circular vinyl! */
+  transform: scale(0.92);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7);
+}
+
+.player-card.playing .vinyl-grooves-overlay,
+.player-card.playing .vinyl-center-hole {
+  opacity: 0.95;
+}
+
+.player-card.playing .vinyl-cover-wrapper::after {
+  opacity: 1;
+  animation: sweep-shine 6s linear infinite;
+}
+
+.player-card.playing .tonearm-wrapper {
+  transform: rotate(20deg); /* sweeps needle onto the record */
+}
+
+/* Pulse beat animation for playing card shadow glow */
+.player-card.playing {
+  box-shadow: 
+    0 30px 60px rgba(0, 0, 0, 0.6), 
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 0 45px rgba(5, 34, 24, 0.6),
+    0 0 15px rgba(255, 179, 176, 0.05);
+}
+
+@keyframes spin-vinyl {
+  0% { transform: scale(0.92) rotate(0deg); }
+  100% { transform: scale(0.92) rotate(360deg); }
+}
+
+@keyframes sweep-shine {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ----------------------------------------------------
+   TRACK META INFORMATION
+   ---------------------------------------------------- */
+.track-meta {
+  text-align: center;
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.song-title {
+  font-size: 27px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+  color: var(--text-white);
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+.song-artist {
+  font-size: 15px;
+  color: var(--primary-color);
+  font-weight: 400;
+  opacity: 0.9;
+  letter-spacing: 0.2px;
+}
+
+/* ----------------------------------------------------
+   SEEKBAR AND TIME DISPLAY
+   ---------------------------------------------------- */
+.seekbar-container {
+  width: 100%;
+  margin-bottom: 28px;
+}
+
+.seekbar-track-wrapper {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  position: relative;
+  cursor: pointer;
+  transition: height 0.2s ease;
+}
+
+.seekbar-track-wrapper:hover {
+  height: 8px;
+}
+
+.seekbar-progress {
+  height: 100%;
+  width: 33%; /* Updated by JS */
+  background: var(--gold-color);
+  border-radius: 3px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-shadow: 0 0 10px var(--gold-glow);
+  transition: width 0.1s linear;
+}
+
+.seekbar-handle {
+  width: 12px;
+  height: 12px;
+  background: var(--text-white);
+  border-radius: 50%;
+  position: absolute;
+  right: -6px;
+  top: 50%;
+  transform: translateY(-50%) scale(0);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.seekbar-track-wrapper:hover .seekbar-handle {
+  transform: translateY(-50%) scale(1);
+}
+
+.time-display {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-dimmed);
+}
+
+/* ----------------------------------------------------
+   CONTROL BUTTONS
+   ---------------------------------------------------- */
+.player-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 8px;
+}
+
+.control-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: var(--transition-bounce);
+  position: relative;
+}
+
+.control-btn svg {
+  width: 22px;
+  height: 22px;
+  transition: var(--transition-smooth);
+}
+
+.control-btn:hover {
+  color: var(--text-white);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.control-btn:active {
+  transform: scale(0.9);
+}
+
+.control-btn.active {
+  color: var(--gold-color);
+  filter: drop-shadow(0 0 6px var(--gold-glow));
+}
+
+.repeat-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: var(--gold-color);
+  color: #000;
+  font-size: 9px;
+  font-weight: 700;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Main circular Play Button */
+.play-btn {
+  background: var(--primary-color);
+  border: none;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 
+    0 8px 20px rgba(255, 179, 176, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition: var(--transition-bounce);
+  color: #0b1411; /* dark contrast inside primary button */
+}
+
+.play-btn:hover {
+  background: var(--primary-dark);
+  transform: scale(1.06);
+  box-shadow: 
+    0 10px 25px rgba(255, 179, 176, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.play-btn:active {
+  transform: scale(0.94);
+}
+
+.play-btn svg {
+  width: 28px;
+  height: 28px;
+  transition: transform 0.3s ease;
+}
+
+/* Play icon positioning offset for visual center */
+.play-icon {
+  transform: translateX(1.5px);
+}
+
+/* ----------------------------------------------------
+   ROMANTIC DEDICATION FOOTER TEXT
+   ---------------------------------------------------- */
+.dedication-section {
+  width: 100%;
+  text-align: center;
+  margin-top: 36px;
+}
+
+.dedication-text {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 19px;
+  color: var(--primary-color);
+  opacity: 0.9;
+  letter-spacing: -0.1px;
+  line-height: 1.5;
+  transition: var(--transition-smooth);
+}
+
+/* ----------------------------------------------------
+   CUSTOM PRESET UTILITIES
+   ---------------------------------------------------- */
+.hidden {
+  display: none !important;
+}
+
+/* ----------------------------------------------------
+   SETTINGS MODAL PANEL (GLASSMORPHISM OVERLAY)
+   ---------------------------------------------------- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(1, 10, 7, 0.8);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  padding: 16px;
+}
+
+.modal-overlay:not(.hidden) {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 400px;
+  max-height: 90vh;
+  background: rgba(18, 30, 24, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 32px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform: scale(0.9);
+  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.modal-overlay:not(.hidden) .modal-card {
+  transform: scale(1);
+}
+
+.modal-header {
+  padding: 24px 24px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.modal-header h2 {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 32px;
+  font-weight: 300;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 0.6;
+  border-radius: 50%;
+  transition: var(--transition-smooth);
+}
+
+.close-btn:hover {
+  color: var(--text-white);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.modal-body {
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="url"],
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 12px 14px;
+  color: var(--text-white);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  outline: none;
+  transition: var(--transition-smooth);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 8px rgba(255, 179, 176, 0.2);
+  background: rgba(0, 0, 0, 0.4);
+}
+
+/* Custom Styled File Upload */
+.form-group input[type="file"] {
+  display: none;
+}
+
+.form-group input[type="file"] + label {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-weight: 500;
+  transition: var(--transition-smooth);
+}
+
+.form-group input[type="file"] + label:hover {
+  background: rgba(255, 179, 176, 0.05);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.file-info {
+  font-size: 11px;
+  color: var(--text-dimmed);
+  margin-top: 4px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.primary-btn, .secondary-btn {
+  flex: 1;
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-bounce);
+}
+
+.primary-btn {
+  background: var(--primary-color);
+  color: #0b1411;
+  box-shadow: 0 4px 12px rgba(255, 179, 176, 0.3);
+}
+
+.primary-btn:hover {
+  background: var(--primary-dark);
+}
+
+.secondary-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-muted);
+}
+
+.secondary-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-white);
+}
+
+/* ----------------------------------------------------
+   RESPONSIVE DESIGN ADAPTATIONS
+   ---------------------------------------------------- */
+@media (max-height: 780px) {
+  .app-container {
+    padding-top: 12px;
+    padding-bottom: 20px;
+  }
+  .player-card {
+    padding: 24px 20px 20px;
+    border-radius: 32px;
+  }
+  .turntable-container {
+    margin-bottom: 20px;
+    border-radius: 20px;
+  }
+  .vinyl-cover-wrapper {
+    border-radius: 20px;
+  }
+  .song-title {
+    font-size: 22px;
+    margin-bottom: 4px;
+  }
+  .song-artist {
+    font-size: 14px;
+  }
+  .seekbar-container {
+    margin-bottom: 18px;
+  }
+  .dedication-section {
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 400px) {
+  .app-container {
+    padding: 16px 12px 24px;
+  }
+  .player-card {
+    border-radius: 28px;
+    padding: 20px 16px 16px;
+  }
+  .song-title {
+    font-size: 20px;
+  }
+  .dedication-text {
+    font-size: 16px;
+  }
+}

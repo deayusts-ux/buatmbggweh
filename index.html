@@ -22,7 +22,7 @@
   <!-- Main Application Wrapper -->
   <main class="app-container">
     
-    <!-- Top Header -->
+    <!-- Top Header (Visible across views, but stays clean) -->
     <header class="app-header">
       <div class="gift-title-container">
         <!-- Gift Icon SVG -->
@@ -41,107 +41,182 @@
       </button>
     </header>
     
-    <!-- Music Player Glassmorphism Card -->
-    <section class="player-card">
-      <span class="now-playing-label">NOW PLAYING</span>
-      
-      <!-- Turntable Cover Container -->
-      <div class="turntable-container">
-        <!-- Vinyl Record Cover (Rotates when playing) -->
-        <div id="vinyl-cover" class="vinyl-cover-wrapper">
-          <img id="cover-img" src="assets/cover.png" alt="Vinyl record turntable cover" class="cover-image">
-          <div class="vinyl-grooves-overlay"></div>
-          <div class="vinyl-center-hole"></div>
-        </div>
-        
-        <!-- Tonearm / Needle (Sweeps onto record when playing) -->
-        <div id="tonearm" class="tonearm-wrapper">
-          <svg class="tonearm-svg" viewBox="0 0 100 150" fill="none">
-            <!-- Tonearm base -->
-            <circle cx="75" cy="25" r="12" fill="#333" stroke="#444" stroke-width="1"/>
-            <circle cx="75" cy="25" r="5" fill="#f8cf6c"/>
-            <!-- Arm tube -->
-            <path d="M75 25 L65 75 L30 115" stroke="#ccc" stroke-width="4" stroke-linecap="round" fill="none"/>
-            <path d="M75 25 L65 75 L30 115" stroke="#fff" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-            <!-- Weight counter-balance -->
-            <rect x="67" y="5" width="16" height="10" rx="2" fill="#555" stroke="#222"/>
-            <!-- Cartridge and stylus -->
-            <rect x="22" y="112" width="12" height="18" rx="1" transform="rotate(-30 28 121)" fill="#e96969"/>
-            <circle cx="24" cy="125" r="2" fill="#fff"/>
-          </svg>
-        </div>
-      </div>
-      
-      <!-- Track Meta (Title and Message) -->
-      <div class="track-meta">
-        <h2 id="song-title" class="song-title">Our Special Song</h2>
-        <p id="song-artist" class="song-artist">From Me to You</p>
-      </div>
-      
-      <!-- Seekbar and Time Display -->
-      <div class="seekbar-container">
-        <div class="seekbar-track-wrapper">
-          <div id="seekbar-progress-bar" class="seekbar-progress">
-            <div id="seekbar-handle" class="seekbar-handle"></div>
+    <!-- ====================================================
+         VIEW 1: LANDING SURPRISE (SEALED GIFT BOX)
+         ==================================================== -->
+    <section id="view-home" class="app-view active-view">
+      <div class="gift-opening-wrapper">
+        <!-- CSS Interactive Gift Box -->
+        <div id="interactive-giftbox" class="giftbox">
+          <div class="gift-lid">
+            <div class="lid-ribbon-horizontal"></div>
+            <div class="lid-bow">
+              <div class="bow-loop bow-left"></div>
+              <div class="bow-loop bow-right"></div>
+            </div>
+            <div class="lid-top"></div>
           </div>
+          <div class="gift-body">
+            <div class="body-ribbon-vertical"></div>
+            <div class="body-ribbon-horizontal"></div>
+            <div class="body-box"></div>
+          </div>
+          <!-- Spark aura inside box -->
+          <div class="gift-spark-aura"></div>
         </div>
-        <div class="time-display">
-          <span id="time-elapsed">0:00</span>
-          <span id="time-total">3:45</span>
-        </div>
-      </div>
-      
-      <!-- Player Control Actions -->
-      <div class="player-controls">
-        <button id="shuffle-btn" class="control-btn" aria-label="Toggle shuffle">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M16 3h5v5M4 20l7-7M21 3L9 15M4 4l5 5M16 21h5v-5M15 15l6 6" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
         
-        <button id="prev-btn" class="control-btn" aria-label="Previous track">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M6 6h2v12H6zm3.5 6L18 18V6z"/>
-          </svg>
-        </button>
-        
-        <!-- Main Play Button -->
-        <button id="play-btn" class="play-btn" aria-label="Play music">
-          <!-- Play icon (shown by default) -->
-          <svg id="play-icon" class="play-icon" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M8 5v14l11-7z"/>
-          </svg>
-          <!-- Pause icon (hidden by default) -->
-          <svg id="pause-icon" class="pause-icon hidden" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-          </svg>
-        </button>
-        
-        <button id="next-btn" class="control-btn" aria-label="Next track">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M6 18l8.5-6L6 6zm9-12v12h2V6z"/>
-          </svg>
-        </button>
-        
-        <button id="repeat-btn" class="control-btn" aria-label="Toggle repeat">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M17 1l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M21 13v2a4 4 0 0 1-4 4H3" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <span id="repeat-badge" class="repeat-badge hidden">1</span>
-        </button>
+        <h2 class="tap-surprise-title">Tap to Open Your Surprise</h2>
       </div>
     </section>
     
-    <!-- Romantic Dedication Message -->
-    <section class="dedication-section">
-      <p id="dedication-text" class="dedication-text">token of my love for you.</p>
+    <!-- ====================================================
+         VIEW 2: MUSIC CARD VIEW (PLAYER CARD)
+         ==================================================== -->
+    <section id="view-player" class="app-view hidden-view">
+      <!-- Music Player Glassmorphism Card -->
+      <div class="player-card">
+        <span class="now-playing-label">NOW PLAYING</span>
+        
+        <!-- Turntable Cover Container -->
+        <div class="turntable-container">
+          <!-- Vinyl Record Cover (Rotates when playing) -->
+          <div id="vinyl-cover" class="vinyl-cover-wrapper">
+            <img id="cover-img" src="assets/cover.png" alt="Vinyl record turntable cover" class="cover-image">
+            <div class="vinyl-grooves-overlay"></div>
+            <div class="vinyl-center-hole"></div>
+          </div>
+          
+          <!-- Tonearm / Needle (Sweeps onto record when playing) -->
+          <div id="tonearm" class="tonearm-wrapper">
+            <svg class="tonearm-svg" viewBox="0 0 100 150" fill="none">
+              <!-- Tonearm base -->
+              <circle cx="75" cy="25" r="12" fill="#333" stroke="#444" stroke-width="1"/>
+              <circle cx="75" cy="25" r="5" fill="#f8cf6c"/>
+              <!-- Arm tube -->
+              <path d="M75 25 L65 75 L30 115" stroke="#ccc" stroke-width="4" stroke-linecap="round" fill="none"/>
+              <path d="M75 25 L65 75 L30 115" stroke="#fff" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+              <!-- Weight counter-balance -->
+              <rect x="67" y="5" width="16" height="10" rx="2" fill="#555" stroke="#222"/>
+              <!-- Cartridge and stylus -->
+              <rect x="22" y="112" width="12" height="18" rx="1" transform="rotate(-30 28 121)" fill="#e96969"/>
+              <circle cx="24" cy="125" r="2" fill="#fff"/>
+            </svg>
+          </div>
+        </div>
+        
+        <!-- Track Meta (Title and Message) -->
+        <div class="track-meta">
+          <h2 id="song-title" class="song-title">Our Special Song</h2>
+          <p id="song-artist" class="song-artist">From Me to You</p>
+        </div>
+        
+        <!-- Seekbar and Time Display -->
+        <div class="seekbar-container">
+          <div class="seekbar-track-wrapper">
+            <div id="seekbar-progress-bar" class="seekbar-progress">
+              <div id="seekbar-handle" class="seekbar-handle"></div>
+            </div>
+          </div>
+          <div class="time-display">
+            <span id="time-elapsed">0:00</span>
+            <span id="time-total">3:45</span>
+          </div>
+        </div>
+        
+        <!-- Player Control Actions -->
+        <div class="player-controls">
+          <button id="shuffle-btn" class="control-btn" aria-label="Toggle shuffle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 3h5v5M4 20l7-7M21 3L9 15M4 4l5 5M16 21h5v-5M15 15l6 6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          
+          <button id="prev-btn" class="control-btn" aria-label="Previous track">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M6 6h2v12H6zm3.5 6L18 18V6z"/>
+            </svg>
+          </button>
+          
+          <!-- Main Play Button -->
+          <button id="play-btn" class="play-btn" aria-label="Play music">
+            <!-- Play icon (shown by default) -->
+            <svg id="play-icon" class="play-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+            <!-- Pause icon (hidden by default) -->
+            <svg id="pause-icon" class="pause-icon hidden" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+            </svg>
+          </button>
+          
+          <button id="next-btn" class="control-btn" aria-label="Next track">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M6 18l8.5-6L6 6zm9-12v12h2V6z"/>
+            </svg>
+          </button>
+          
+          <button id="repeat-btn" class="control-btn" aria-label="Toggle repeat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 1l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M21 13v2a4 4 0 0 1-4 4H3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span id="repeat-badge" class="repeat-badge hidden">1</span>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Romantic Dedication Message -->
+      <div class="dedication-section">
+        <p id="dedication-text" class="dedication-text">token of my love for you.</p>
+      </div>
     </section>
   </main>
   
+  <!-- ====================================================
+       BOTTOM FLOATING GLASSMORPHIC NAVIGATION BAR
+       ==================================================== -->
+  <nav class="bottom-nav">
+    <button id="nav-home" class="nav-item active" aria-label="Go to Home">
+      <div class="nav-icon-wrapper">
+        <!-- Gift Icon -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 12v10H4V12M2 7h20v5H2zM12 22V7M12 7c2.5-2.5 4.5-1.5 4.5 1S14 11 12 12c-2-1-4.5-3.5-4.5-4S9.5 4.5 12 7z" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </button>
+    
+    <button id="nav-player" class="nav-item" aria-label="Go to Music Player">
+      <div class="nav-icon-wrapper">
+        <!-- Music Card Stack Icon -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="14" height="14" rx="2" stroke-linecap="round"/>
+          <path d="M7 21h12a2 2 0 0 0 2-2V7" stroke-linecap="round"/>
+          <circle cx="10" cy="10" r="2"/>
+          <path d="M12 10V6h3" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </button>
+    
+    <button id="nav-share" class="nav-item" aria-label="Share Gift Link">
+      <div class="nav-icon-wrapper">
+        <!-- Share Nodes Icon -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="18" cy="5" r="3"/>
+          <circle cx="6" cy="12" r="3"/>
+          <circle cx="18" cy="19" r="3"/>
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+        </svg>
+      </div>
+    </button>
+  </nav>
+  
   <!-- Audio Tag (for file uploads or direct streaming links) -->
   <audio id="audio-player" style="display:none;"></audio>
+  
+  <!-- Toast Notification Alert -->
+  <div id="toast-notification" class="toast-notification hidden">Link Copied to Clipboard! 🎁</div>
   
   <!-- Settings & Customization Modal -->
   <div id="settings-modal" class="modal-overlay hidden">

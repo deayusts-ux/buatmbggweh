@@ -44,7 +44,18 @@ const dom = {
   dedicationText: document.getElementById('dedication-text'),
   coverImg: document.getElementById('cover-img'),
   
-  // Player
+  // Multi-View System
+  viewHome: document.getElementById('view-home'),
+  viewPlayer: document.getElementById('view-player'),
+  interactiveGiftbox: document.getElementById('interactive-giftbox'),
+  
+  // Bottom Navigation & Toast
+  navHome: document.getElementById('nav-home'),
+  navPlayer: document.getElementById('nav-player'),
+  navShare: document.getElementById('nav-share'),
+  toastNotification: document.getElementById('toast-notification'),
+  
+  // Player Card UI
   playerCard: document.querySelector('.player-card'),
   vinylCover: document.getElementById('vinyl-cover'),
   tonearm: document.getElementById('tonearm'),
@@ -173,7 +184,7 @@ function saveSettings() {
   
   // Store text and dropdown states
   const serializableState = { ...state };
-  // Don't save huge audio file DataURL in localStorage if it exceeds storage caps
+  // Don't save huge audio DataURL in localStorage if it exceeds storage caps
   if (serializableState.customAudioFile && serializableState.customAudioFile.length > 2000000) {
     serializableState.customAudioFile = null; // Remove if too big, keep loaded in memory
   }
@@ -201,6 +212,54 @@ function saveSettings() {
   }
   
   closeModal();
+}
+
+/* ----------------------------------------------------
+   EVENT LISTENERS SETUP
+   ---------------------------------------------------- */
+function setupEventListeners() {
+  // Play button click
+  dom.playBtn.addEventListener('click', togglePlayPause);
+  
+  // Seek bar native progress
+  dom.audioPlayer.addEventListener('timeupdate', handleNativeTimeUpdate);
+  dom.audioPlayer.addEventListener('ended', handleTrackEnded);
+  dom.seekbarTrack.addEventListener('click', handleSeekbarClick);
+  
+  // Controls
+  dom.repeatBtn.addEventListener('click', toggleRepeat);
+  dom.shuffleBtn.addEventListener('click', toggleShuffle);
+  dom.nextBtn.addEventListener('click', triggerNextPrevTrack);
+  dom.prevBtn.addEventListener('click', triggerNextPrevTrack);
+  
+  // Settings modal
+  dom.settingsBtn.addEventListener('click', openModal);
+  dom.modalCloseBtn.addEventListener('click', closeModal);
+  dom.saveSettingsBtn.addEventListener('click', saveSettings);
+  dom.resetDefaultBtn.addEventListener('click', resetToDefaults);
+  dom.settingsModal.addEventListener('click', handleModalOverlayClick);
+  
+  dom.inputTrackSelect.addEventListener('change', toggleFormGroups);
+  dom.inputCoverSelect.addEventListener('change', toggleFormGroups);
+  
+  // Custom file upload handlers
+  dom.inputAudioFile.addEventListener('change', handleAudioFileUpload);
+  dom.inputImageFile.addEventListener('change', handleImageFileUpload);
+  
+  // Space bar play trigger
+  document.addEventListener('keydown', handleGlobalKeydown);
+  
+  // ====================================================
+  // VIEW SWITCHING & INTERACTION LOGIC
+  // ====================================================
+  
+  // Gift Box Open Surprise Click
+  dom.interactiveGiftbox.addEventListener('click', handleGiftboxClick);
+  
+  // Bottom Navigation tab buttons
+  dom.navHome.addEventListener('click', () => switchView('home'));
+  dom.navPlayer.addEventListener('click', () => switchView('player'));
+  dom.navShare.addEventListener('click', handleShareAction);
 }
 
 /* ----------------------------------------------------
@@ -232,6 +291,126 @@ function initBokehBackground() {
     p.style.animationDelay = `-${Math.random() * 25}s`;
     
     dom.bokehContainer.appendChild(p);
+  }
+}
+
+/* ----------------------------------------------------
+   VIEW CONTROLLER & SURPRISE OPEN ANIMATION
+   ---------------------------------------------------- */
+// Switch smoothly between Home view and Player view
+function switchView(viewName) {
+  // Update nav active tab highlights
+  dom.navHome.classList.toggle('active', viewName === 'home');
+  dom.navPlayer.classList.toggle('active', viewName === 'player');
+  
+  if (viewName === 'home') {
+    // Fade out player and fade in home
+    dom.viewPlayer.classList.add('hidden-view');
+    dom.viewPlayer.classList.remove('active-view');
+    
+    dom.viewHome.classList.remove('hidden-view');
+    dom.viewHome.classList.add('active-view');
+    
+    // Reset the giftbox open status so they can tap it again
+    dom.interactiveGiftbox.classList.remove('open');
+    
+    // Stop playback when returning home for a peaceful experience
+    if (state.isPlaying) {
+      togglePlayPause();
+    }
+  } else {
+    // Fade out home and fade in player
+    dom.viewHome.classList.add('hidden-view');
+    dom.viewHome.classList.remove('active-view');
+    
+    dom.viewPlayer.classList.remove('hidden-view');
+    dom.viewPlayer.classList.add('active-view');
+  }
+}
+
+// Hand Gift surprise opening animation
+function handleGiftboxClick() {
+  if (dom.interactiveGiftbox.classList.contains('open')) return;
+  
+  // 1. Trigger CSS Pop/Lift Lid & Untie ribbon
+  dom.interactiveGiftbox.classList.add('open');
+  
+  // 2. Spawn Spectacular Golden Spark Particles
+  spawnGiftSparks(25);
+  
+  // 3. Smoothly Transition View from Gift Box to Music Player (750ms delay)
+  setTimeout(() => {
+    switchView('player');
+    
+    // 4. Auto-Play: drop the mechanical tonearm and play the music!
+    if (!state.isPlaying) {
+      togglePlayPause();
+    }
+  }, 750);
+}
+
+// Spawn beautiful random golden floating sparks on box opening
+function spawnGiftSparks(count) {
+  const rect = dom.interactiveGiftbox.getBoundingClientRect();
+  const originX = rect.left + rect.width / 2;
+  const originY = rect.top + rect.height / 2;
+  
+  for (let i = 0; i < count; i++) {
+    const spark = document.createElement('div');
+    spark.classList.add('open-spark');
+    
+    // Position at center of gift box
+    spark.style.left = `${originX}px`;
+    spark.style.top = `${originY}px`;
+    
+    // Set random velocity displacements
+    const angle = Math.random() * Math.PI * 2;
+    const distance = Math.random() * 180 + 70;
+    const tx = Math.cos(angle) * distance;
+    const ty = Math.sin(angle) * distance - 40; // Bias upwards slightly
+    
+    spark.style.setProperty('--tx', `${tx}px`);
+    spark.style.setProperty('--ty', `${ty}px`);
+    
+    // Random sizes and speed delays
+    const size = Math.random() * 6 + 6;
+    spark.style.width = `${size}px`;
+    spark.style.height = `${size}px`;
+    spark.style.animationDelay = `${Math.random() * 0.15}s`;
+    
+    document.body.appendChild(spark);
+    
+    // Garbage collection of completed spark DOMs
+    setTimeout(() => {
+      spark.remove();
+    }, 1300);
+  }
+}
+
+// Native Share trigger or toast fallback copy-to-clipboard
+function handleShareAction() {
+  if (navigator.share) {
+    navigator.share({
+      title: state.giftHeader,
+      text: `🎁 ${state.songTitle} - ${state.songArtist}. Buka hadiah kejutan spesial untukmu di sini!`,
+      url: window.location.href
+    }).catch(console.error);
+  } else {
+    // Fallback Clipboard copy
+    navigator.clipboard.writeText(window.location.href)
+      .then(() => {
+        // Toggle beautiful Toast Notification
+        dom.toastNotification.classList.remove('hidden');
+        dom.toastNotification.classList.add('visible');
+        
+        setTimeout(() => {
+          dom.toastNotification.classList.remove('visible');
+          setTimeout(() => dom.toastNotification.classList.add('hidden'), 500);
+        }, 2500);
+      })
+      .catch(err => {
+        console.error("Failed to copy gift URL: ", err);
+      });
   }
 }
 
@@ -490,14 +669,14 @@ function updateButtonStates() {
    SEEKBAR PROGRESS & INTERACTIVITY
    ---------------------------------------------------- */
 // Handle Audio Player Native Time Updates
-dom.audioPlayer.addEventListener('timeupdate', () => {
+function handleNativeTimeUpdate() {
   if (state.activeTrackType === 'procedural') return;
   const currentTime = dom.audioPlayer.currentTime;
   const duration = dom.audioPlayer.duration || 0;
   
   updateProgressBar(currentTime, duration);
   updateTimeDisplay(currentTime, duration);
-});
+}
 
 // Update elapsed text elements
 function updateTimeDisplay(current, duration) {
@@ -520,7 +699,7 @@ function updateProgressBar(current, duration) {
 }
 
 // Handle Seekbar Interaction
-dom.seekbarTrack.addEventListener('click', (e) => {
+function handleSeekbarClick(e) {
   const rect = dom.seekbarTrack.getBoundingClientRect();
   const clickX = e.clientX - rect.left;
   const percent = Math.max(0, Math.min(100, (clickX / rect.width)));
@@ -537,10 +716,10 @@ dom.seekbarTrack.addEventListener('click', (e) => {
       dom.audioPlayer.currentTime = (percent / 100) * duration;
     }
   }
-});
+}
 
 // Repeat Toggle Logic
-dom.repeatBtn.addEventListener('click', () => {
+function toggleRepeat() {
   state.repeatState = (state.repeatState + 1) % 3;
   
   if (state.repeatState === 0) {
@@ -559,23 +738,15 @@ dom.repeatBtn.addEventListener('click', () => {
     dom.repeatBadge.classList.add('hidden');
     dom.audioPlayer.loop = false;
   }
-});
+}
 
 // Shuffle Toggle Logic
-dom.shuffleBtn.addEventListener('click', () => {
+function toggleShuffle() {
   state.isShuffle = !state.isShuffle;
   dom.shuffleBtn.classList.toggle('active', state.isShuffle);
-});
+}
 
 // Skip forward / backward buttons (Demo arpeggiators or preset changes)
-dom.nextBtn.addEventListener('click', () => {
-  triggerNextPrevTrack();
-});
-
-dom.prevBtn.addEventListener('click', () => {
-  triggerNextPrevTrack();
-});
-
 function triggerNextPrevTrack() {
   // Skip to start or mock a beautiful chord synth notes trigger
   if (state.isPlaying) {
@@ -596,7 +767,7 @@ function triggerNextPrevTrack() {
 }
 
 // When native audio reaches end
-dom.audioPlayer.addEventListener('ended', () => {
+function handleTrackEnded() {
   if (state.repeatState === 1) {
     dom.audioPlayer.play();
   } else if (state.repeatState === 2) {
@@ -607,23 +778,11 @@ dom.audioPlayer.addEventListener('ended', () => {
     dom.playerCard.classList.remove('playing');
     updateButtonStates();
   }
-});
+}
 
 /* ----------------------------------------------------
    MODAL DIALOG & CUSTOM SETTINGS MANAGEMENT
    ---------------------------------------------------- */
-dom.settingsBtn.addEventListener('click', openModal);
-dom.modalCloseBtn.addEventListener('click', closeModal);
-dom.saveSettingsBtn.addEventListener('click', saveSettings);
-dom.resetDefaultBtn.addEventListener('click', resetToDefaults);
-
-// Click outside modal card to close
-dom.settingsModal.addEventListener('click', (e) => {
-  if (e.target === dom.settingsModal) {
-    closeModal();
-  }
-});
-
 function openModal() {
   dom.settingsModal.classList.remove('hidden');
   document.body.style.overflow = 'hidden'; // Lock background scrolling
@@ -634,10 +793,13 @@ function closeModal() {
   document.body.style.overflow = '';
 }
 
-// Show/Hide forms based on custom source dropdowns
-dom.inputTrackSelect.addEventListener('change', toggleFormGroups);
-dom.inputCoverSelect.addEventListener('change', toggleFormGroups);
+function handleModalOverlayClick(e) {
+  if (e.target === dom.settingsModal) {
+    closeModal();
+  }
+}
 
+// Show/Hide forms based on custom source dropdowns
 function toggleFormGroups() {
   const trackVal = dom.inputTrackSelect.value;
   const coverVal = dom.inputCoverSelect.value;
@@ -652,7 +814,7 @@ function toggleFormGroups() {
 }
 
 // File Reader Handlers for Audio Uploads
-dom.inputAudioFile.addEventListener('change', (e) => {
+function handleAudioFileUpload(e) {
   const file = e.target.files[0];
   if (file) {
     dom.audioFileInfo.textContent = "Loading file...";
@@ -663,10 +825,10 @@ dom.inputAudioFile.addEventListener('change', (e) => {
     };
     reader.readAsDataURL(file);
   }
-});
+}
 
 // File Reader Handlers for Image Uploads
-dom.inputImageFile.addEventListener('change', (e) => {
+function handleImageFileUpload(e) {
   const file = e.target.files[0];
   if (file) {
     dom.imageFileInfo.textContent = "Loading image...";
@@ -677,7 +839,7 @@ dom.inputImageFile.addEventListener('change', (e) => {
     };
     reader.readAsDataURL(file);
   }
-});
+}
 
 // Reset inputs to default values
 function resetToDefaults() {
@@ -724,12 +886,9 @@ function resetToDefaults() {
 }
 
 // Bind basic key events (Space to Play/Pause)
-document.addEventListener('keydown', (e) => {
+function handleGlobalKeydown(e) {
   if (e.code === 'Space' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
     e.preventDefault();
     togglePlayPause();
   }
-});
-
-// Setup primary play button click
-dom.playBtn.addEventListener('click', togglePlayPause);
+}

@@ -946,7 +946,7 @@ function initSlideshow() {
     // Activate next slide
     images[currentSlideIndex].classList.add('active-slide');
     dots[currentSlideIndex].classList.add('active-dot');
-  }, 2000);
+  }, 1500);
   
   // Allow clicking dots to jump to a specific slide
   dots.forEach((dot, index) => {
@@ -970,7 +970,7 @@ function initSlideshow() {
         currentSlideIndex = (currentSlideIndex + 1) % images.length;
         images[currentSlideIndex].classList.add('active-slide');
         dots[currentSlideIndex].classList.add('active-dot');
-      }, 2000);
+      }, 1500);
     });
   });
 }

@@ -77,30 +77,22 @@
       <div class="player-card">
         <span class="now-playing-label">NOW PLAYING</span>
         
-        <!-- Turntable Cover Container -->
-        <div class="turntable-container">
-          <!-- Vinyl Record Cover (Rotates when playing) -->
-          <div id="vinyl-cover" class="vinyl-cover-wrapper">
-            <img id="cover-img" src="assets/cover.png" alt="Vinyl record turntable cover" class="cover-image">
-            <div class="vinyl-grooves-overlay"></div>
-            <div class="vinyl-center-hole"></div>
+        <!-- Photo Slideshow Container -->
+        <div class="slideshow-container">
+          <div id="slideshow-wrapper" class="slideshow-wrapper">
+            <img src="assets/photo1.jpg" alt="Foto 1" class="slideshow-image active-slide">
+            <img src="assets/photo2.jpg" alt="Foto 2" class="slideshow-image">
+            <img src="assets/photo3.jpg" alt="Foto 3" class="slideshow-image">
+            <img src="assets/photo4.jpg" alt="Foto 4" class="slideshow-image">
+            <img src="assets/photo5.jpg" alt="Foto 5" class="slideshow-image">
           </div>
-          
-          <!-- Tonearm / Needle (Sweeps onto record when playing) -->
-          <div id="tonearm" class="tonearm-wrapper">
-            <svg class="tonearm-svg" viewBox="0 0 100 150" fill="none">
-              <!-- Tonearm base -->
-              <circle cx="75" cy="25" r="12" fill="#333" stroke="#444" stroke-width="1"/>
-              <circle cx="75" cy="25" r="5" fill="#f8cf6c"/>
-              <!-- Arm tube -->
-              <path d="M75 25 L65 75 L30 115" stroke="#ccc" stroke-width="4" stroke-linecap="round" fill="none"/>
-              <path d="M75 25 L65 75 L30 115" stroke="#fff" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-              <!-- Weight counter-balance -->
-              <rect x="67" y="5" width="16" height="10" rx="2" fill="#555" stroke="#222"/>
-              <!-- Cartridge and stylus -->
-              <rect x="22" y="112" width="12" height="18" rx="1" transform="rotate(-30 28 121)" fill="#e96969"/>
-              <circle cx="24" cy="125" r="2" fill="#fff"/>
-            </svg>
+          <!-- Slide indicator dots -->
+          <div class="slideshow-dots">
+            <span class="slide-dot active-dot"></span>
+            <span class="slide-dot"></span>
+            <span class="slide-dot"></span>
+            <span class="slide-dot"></span>
+            <span class="slide-dot"></span>
           </div>
         </div>
         

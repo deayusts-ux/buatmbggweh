@@ -42,7 +42,6 @@ const dom = {
   songTitle: document.getElementById('song-title'),
   songArtist: document.getElementById('song-artist'),
   dedicationText: document.getElementById('dedication-text'),
-  coverImg: document.getElementById('cover-img'),
   
   // Multi-View System
   viewHome: document.getElementById('view-home'),
@@ -57,9 +56,10 @@ const dom = {
   
   // Player Card UI
   playerCard: document.querySelector('.player-card'),
-  vinylCover: document.getElementById('vinyl-cover'),
-  tonearm: document.getElementById('tonearm'),
   audioPlayer: document.getElementById('audio-player'),
+  
+  // Slideshow
+  slideshowWrapper: document.getElementById('slideshow-wrapper'),
   
   // Controls
   playBtn: document.getElementById('play-btn'),
@@ -113,6 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadSettings();
   setupEventListeners();
   updateTimeDisplay(0, synthDuration);
+  initSlideshow();
 });
 
 // Load settings from localStorage
@@ -141,15 +142,7 @@ function loadSettings() {
       dom.inputCoverSelect.value = state.activeCoverType;
       dom.inputImageUrl.value = state.customImageUrl;
       
-      // Load Custom Images if present
-      if (state.activeCoverType === 'custom-file' && state.customImageFile) {
-        dom.coverImg.src = state.customImageFile;
-        dom.imageFileInfo.textContent = "Custom image loaded";
-      } else if (state.activeCoverType === 'custom-url' && state.customImageUrl) {
-        dom.coverImg.src = state.customImageUrl;
-      } else {
-        dom.coverImg.src = 'assets/cover.png';
-      }
+      // Cover image settings preserved for compatibility but slideshow is now fixed
       
       // Load Custom Audio info
       if (state.customAudioFile) {
@@ -197,14 +190,7 @@ function saveSettings() {
   dom.songArtist.textContent = state.songArtist;
   dom.dedicationText.textContent = state.dedicationText;
   
-  // Set cover art
-  if (state.activeCoverType === 'custom-file' && state.customImageFile) {
-    dom.coverImg.src = state.customImageFile;
-  } else if (state.activeCoverType === 'custom-url' && state.customImageUrl) {
-    dom.coverImg.src = state.customImageUrl;
-  } else {
-    dom.coverImg.src = 'assets/cover.png';
-  }
+  // Slideshow photos are fixed, no cover art change needed
   
   // Stop current playing audio to switch sources cleanly
   if (state.isPlaying) {
@@ -338,6 +324,9 @@ function handleGiftboxClick() {
   // 2. Spawn Spectacular Golden Spark Particles
   spawnGiftSparks(25);
   
+  // 3. Spawn floating love hearts bursting out of the gift
+  spawnLoveHearts(15);
+  
   // 3. Smoothly Transition View from Gift Box to Music Player (750ms delay)
   setTimeout(() => {
     switchView('player');
@@ -384,6 +373,46 @@ function spawnGiftSparks(count) {
     setTimeout(() => {
       spark.remove();
     }, 1300);
+  }
+}
+
+// Spawn floating love hearts bursting out of the gift box
+function spawnLoveHearts(count) {
+  const rect = dom.interactiveGiftbox.getBoundingClientRect();
+  const originX = rect.left + rect.width / 2;
+  const originY = rect.top + rect.height / 2;
+  
+  const heartEmojis = ['❤️', '💕', '💖', '💗', '💘', '💝', '🩷', '🤍'];
+  
+  for (let i = 0; i < count; i++) {
+    const heart = document.createElement('div');
+    heart.classList.add('open-heart');
+    heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+    
+    // Position at center of gift box
+    heart.style.left = `${originX}px`;
+    heart.style.top = `${originY}px`;
+    
+    // Random upward & outward burst direction
+    const angle = Math.random() * Math.PI * 2;
+    const distance = Math.random() * 200 + 80;
+    const tx = Math.cos(angle) * distance;
+    const ty = Math.sin(angle) * distance - 60; // Bias upwards
+    const rot = (Math.random() - 0.5) * 90; // Random rotation
+    const size = Math.random() * 16 + 18; // 18px - 34px
+    
+    heart.style.setProperty('--tx', `${tx}px`);
+    heart.style.setProperty('--ty', `${ty}px`);
+    heart.style.setProperty('--rot', `${rot}deg`);
+    heart.style.setProperty('--sz', `${size}px`);
+    heart.style.animationDelay = `${Math.random() * 0.25}s`;
+    
+    document.body.appendChild(heart);
+    
+    // Garbage collection
+    setTimeout(() => {
+      heart.remove();
+    }, 1900);
   }
 }
 
@@ -873,7 +902,7 @@ function resetToDefaults() {
     dom.songTitle.textContent = state.songTitle;
     dom.songArtist.textContent = state.songArtist;
     dom.dedicationText.textContent = state.dedicationText;
-    dom.coverImg.src = 'assets/cover.png';
+    // Slideshow photos are fixed, no cover reset needed
     
     toggleFormGroups();
     
@@ -891,4 +920,57 @@ function handleGlobalKeydown(e) {
     e.preventDefault();
     togglePlayPause();
   }
+}
+
+/* ----------------------------------------------------
+   PHOTO SLIDESHOW ENGINE
+   ---------------------------------------------------- */
+let slideshowInterval = null;
+let currentSlideIndex = 0;
+
+function initSlideshow() {
+  const images = document.querySelectorAll('.slideshow-image');
+  const dots = document.querySelectorAll('.slide-dot');
+  
+  if (images.length === 0) return;
+  
+  // Start auto-cycling every 2 seconds
+  slideshowInterval = setInterval(() => {
+    // Remove active from current slide
+    images[currentSlideIndex].classList.remove('active-slide');
+    dots[currentSlideIndex].classList.remove('active-dot');
+    
+    // Move to next slide (loop back to 0)
+    currentSlideIndex = (currentSlideIndex + 1) % images.length;
+    
+    // Activate next slide
+    images[currentSlideIndex].classList.add('active-slide');
+    dots[currentSlideIndex].classList.add('active-dot');
+  }, 2000);
+  
+  // Allow clicking dots to jump to a specific slide
+  dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+      // Clear the auto-cycle temporarily
+      clearInterval(slideshowInterval);
+      
+      // Remove active from current
+      images[currentSlideIndex].classList.remove('active-slide');
+      dots[currentSlideIndex].classList.remove('active-dot');
+      
+      // Jump to clicked slide
+      currentSlideIndex = index;
+      images[currentSlideIndex].classList.add('active-slide');
+      dots[currentSlideIndex].classList.add('active-dot');
+      
+      // Restart auto-cycle
+      slideshowInterval = setInterval(() => {
+        images[currentSlideIndex].classList.remove('active-slide');
+        dots[currentSlideIndex].classList.remove('active-dot');
+        currentSlideIndex = (currentSlideIndex + 1) % images.length;
+        images[currentSlideIndex].classList.add('active-slide');
+        dots[currentSlideIndex].classList.add('active-dot');
+      }, 2000);
+    });
+  });
 }

@@ -8,7 +8,7 @@ let synthInterval = null;
 let ambientNodes = [];
 let isSynthPlaying = false;
 let synthTimeElapsed = 0;
-let synthDuration = 225; // 3 minutes 45 seconds (225 seconds)
+let synthDuration = 265; // 4 minutes 25 seconds (265 seconds)
 
 // Audio Preset URLs (High Quality Royalty Free Acoustic / Cinematic Tracks)
 const PRESET_TRACKS = {
@@ -30,8 +30,8 @@ const state = {
   
   // Custom text options
   giftHeader: 'A Gift for You',
-  songTitle: 'Our Special Song',
-  songArtist: 'From Me to You',
+  songTitle: 'Mari Bercerita',
+  songArtist: 'Payung Teduh',
   dedicationText: 'token of my love for you.'
 };
 
@@ -883,8 +883,8 @@ function resetToDefaults() {
     state.customImageUrl = '';
     state.customImageFile = null;
     state.giftHeader = 'A Gift for You';
-    state.songTitle = 'Our Special Song';
-    state.songArtist = 'From Me to You';
+    state.songTitle = 'Mari Bercerita';
+    state.songArtist = 'Payung Teduh';
     state.dedicationText = 'token of my love for you.';
     
     // Reset values in forms

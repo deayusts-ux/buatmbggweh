@@ -940,7 +940,7 @@ function initSlideshow() {
   
   if (images.length === 0) return;
   
-  // Start auto-cycling every 2 seconds
+  // Start auto-cycling every 3 seconds
   slideshowInterval = setInterval(() => {
     // Remove active from current slide
     images[currentSlideIndex].classList.remove('active-slide');
@@ -952,7 +952,7 @@ function initSlideshow() {
     // Activate next slide
     images[currentSlideIndex].classList.add('active-slide');
     dots[currentSlideIndex].classList.add('active-dot');
-  }, 1500);
+  }, 3000);
   
   // Allow clicking dots to jump to a specific slide
   dots.forEach((dot, index) => {
@@ -976,7 +976,7 @@ function initSlideshow() {
         currentSlideIndex = (currentSlideIndex + 1) % images.length;
         images[currentSlideIndex].classList.add('active-slide');
         dots[currentSlideIndex].classList.add('active-dot');
-      }, 1500);
+      }, 3000);
     });
   });
 }

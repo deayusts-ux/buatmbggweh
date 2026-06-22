@@ -12,7 +12,7 @@ let synthDuration = 265; // 4 minutes 25 seconds (265 seconds)
 
 // Audio Preset URLs (High Quality Royalty Free Acoustic / Cinematic Tracks)
 const PRESET_TRACKS = {
-  'preset-1': 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', // Stable fallback demo track
+  'preset-1': 'assets/mari-bercerita.mp3', // Mari Bercerita by Payung Teduh
   'preset-2': 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3'  // Stable fallback demo track 2
 };
 
@@ -21,7 +21,7 @@ const state = {
   isPlaying: false,
   isShuffle: false,
   repeatState: 0, // 0 = Off, 1 = Repeat One, 2 = Repeat All
-  activeTrackType: 'procedural', // 'procedural', 'preset-1', 'preset-2', 'custom-url', 'custom-file'
+  activeTrackType: 'preset-1', // 'procedural', 'preset-1', 'preset-2', 'custom-url', 'custom-file'
   customAudioUrl: '',
   customAudioFile: null, // DataURL
   activeCoverType: 'default', // 'default', 'custom-url', 'custom-file'
@@ -122,6 +122,10 @@ function loadSettings() {
   if (savedState) {
     try {
       const parsed = JSON.parse(savedState);
+      // Migration: migrate old default 'procedural' track to 'preset-1' (Mari Bercerita)
+      if (parsed.activeTrackType === 'procedural') {
+        parsed.activeTrackType = 'preset-1';
+      }
       Object.assign(state, parsed);
       
       // Update Texts
@@ -159,6 +163,8 @@ function loadSettings() {
     dom.inputSongTitle.value = state.songTitle;
     dom.inputSongArtist.value = state.songArtist;
     dom.inputDedication.value = state.dedicationText;
+    dom.inputTrackSelect.value = state.activeTrackType;
+    dom.inputCoverSelect.value = state.activeCoverType;
   }
 }
 
@@ -876,7 +882,7 @@ function resetToDefaults() {
     localStorage.removeItem('romantic_gift_state');
     
     // Restore state values
-    state.activeTrackType = 'procedural';
+    state.activeTrackType = 'preset-1';
     state.activeCoverType = 'default';
     state.customAudioUrl = '';
     state.customAudioFile = null;
